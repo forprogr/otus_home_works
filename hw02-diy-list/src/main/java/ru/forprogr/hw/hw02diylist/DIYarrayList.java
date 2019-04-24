@@ -14,10 +14,10 @@ public class DIYarrayList<T> implements List<T>{
 	private Object[] elements_arr;
 
 	//начальный размер массива элементов
-	private final int BEG_LENGTH_ARR = 10;
+	private final int BEGIN_LENGTH_ARRAY = 10;
 
 	//множитель увеличения размер массива элементов
-	private final int MULTIPL_LENGTH_ARR = 2;
+	private final int MULTIPLIER_LENGTH_ARRAY = 2;
 
 	//количество элементов в списке
 	private int count_elements;
@@ -36,7 +36,7 @@ public class DIYarrayList<T> implements List<T>{
 		int new_count_elem = count_elements+p_count_add_elem;
 
 		if (elements_arr.length<(new_count_elem)) {
-			int new_length_arr = new_count_elem * MULTIPL_LENGTH_ARR;
+			int new_length_arr = new_count_elem * MULTIPLIER_LENGTH_ARRAY;
 			Object[] new_elements_arr = new Object[new_length_arr];
 
 			System.arraycopy(elements_arr,0,new_elements_arr,0,elements_arr.length);
@@ -104,7 +104,7 @@ public class DIYarrayList<T> implements List<T>{
 
 	@Override
 	public T remove(int index) {
-		chk_out_of_bounds(index);
+		chk_out_of_bounds(index,false);
 
 		T ret_obj = get(index);
 
@@ -185,9 +185,7 @@ public class DIYarrayList<T> implements List<T>{
 
 	@Override
 	public void add(int index, T element) {
-		if (index < 0 || index > size()){
-			throw new IndexOutOfBoundsException(index);
-		}
+		chk_out_of_bounds(index,true);
 
 		expand_arr(1);
 
@@ -199,9 +197,7 @@ public class DIYarrayList<T> implements List<T>{
 
 	@Override
 	public boolean addAll(int index, Collection<? extends T> c) {
-		if (index > size() || index < 0) {
-			throw new IndexOutOfBoundsException();
-		}
+		chk_out_of_bounds(index,true);
 
 		if (c.isEmpty()) {
 			return false;
@@ -244,26 +240,38 @@ public class DIYarrayList<T> implements List<T>{
 	@Override
 	public void clear() {
 		count_elements = 0;
-		elements_arr = new Object[BEG_LENGTH_ARR];
+		elements_arr = new Object[BEGIN_LENGTH_ARRAY];
 	}
 
 	//проверка на выход индекса за пределы диапазона
-	private void chk_out_of_bounds(int p_index){
-		if (p_index < 0 || p_index > last_elem_index()){
+	private void chk_out_of_bounds(int p_index,boolean p_can_equal_size){
+		if (p_index < 0
+				|| (p_index > last_elem_index() && !p_can_equal_size)
+				|| (p_index > size() && p_can_equal_size)
+		){
 			throw new IndexOutOfBoundsException(p_index);
+		}
+	}
+
+	private void chk_out_of_bounds(int p_index_from, int p_index_to,boolean p_can_equal_size){
+		chk_out_of_bounds(p_index_from,p_can_equal_size);
+		chk_out_of_bounds(p_index_to,p_can_equal_size);
+
+		if (p_index_from > p_index_to){
+			throw new IndexOutOfBoundsException();
 		}
 	}
 
 	@Override
 	public T get(int index) {
-		chk_out_of_bounds(index);
+		chk_out_of_bounds(index,false);
 
 		return (T) elements_arr[index];
 	}
 
 	@Override
 	public T set(int index, T element) {
-		chk_out_of_bounds(index);
+		chk_out_of_bounds(index,false);
 
 		T old_element = get(index);
 
@@ -326,10 +334,7 @@ public class DIYarrayList<T> implements List<T>{
 
 	@Override
 	public List<T> subList(int fromIndex, int toIndex) {
-
-		if (fromIndex < 0 || toIndex > size() || fromIndex > toIndex){
-			throw new IndexOutOfBoundsException();
-		}
+		chk_out_of_bounds(fromIndex,toIndex,true);
 
 		DIYarrayList<T> sub_list = new DIYarrayList<>();
 
