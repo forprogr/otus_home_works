@@ -7,41 +7,36 @@ package ru.forprogr.hw.hw02diylist;
 //-----------------------------------------------------------------------------
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DIYarrayList<T> implements List<T>{
 
-	//хранилище элементов списка
-	private Object[] elements_arr;
+	private Object[] elementsStorage;
 
-	//начальный размер массива элементов
 	private final int BEGIN_LENGTH_ARRAY = 10;
 
-	//множитель увеличения размер массива элементов
 	private final int MULTIPLIER_LENGTH_ARRAY = 2;
 
-	//количество элементов в списке
-	private int count_elements;
+	private int listSize;
 
-	//индекс последнего элемента в списке
-	public int last_elem_index(){
-		if (count_elements == 0){
+	public int getLastIndex(){
+		if (listSize == 0){
 			return 0;
 		}
 
-		return count_elements-1;
+		return listSize-1;
 	}
 
-	//увеличим размер массива чтобы поместились еще p_count_add_elem элементов
-	private void expand_arr(int p_count_add_elem){
-		int new_count_elem = count_elements+p_count_add_elem;
+	private void expandArray(int p_addedSize){
+		int newListSize = listSize+p_addedSize;
 
-		if (elements_arr.length<(new_count_elem)) {
-			int new_length_arr = new_count_elem * MULTIPLIER_LENGTH_ARRAY;
-			Object[] new_elements_arr = new Object[new_length_arr];
+		if (elementsStorage.length < newListSize) {
+			int newStorageSize = newListSize * MULTIPLIER_LENGTH_ARRAY;
+			Object[] newElementsStorage = new Object[newStorageSize];
 
-			System.arraycopy(elements_arr,0,new_elements_arr,0,elements_arr.length);
+			System.arraycopy(elementsStorage,0,newElementsStorage,0,elementsStorage.length);
 
-			elements_arr = new_elements_arr;
+			elementsStorage = newElementsStorage;
 		}
 	}
 
@@ -52,84 +47,83 @@ public class DIYarrayList<T> implements List<T>{
 
 	@Override
 	public int size() {
-		return count_elements;
+		return listSize;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return count_elements == 0;
+		return listSize == 0;
 	}
 
 	@Override
 	public boolean contains(Object o) {
-		return find_elem(o,false) != -1 ;
+		return findElementIndex(o,false) != -1 ;
 	}
 
 	@Override
 	public Object[] toArray() {
-		Object[] ret_arr = new Object[size()];
+		Object[] retArray = new Object[size()];
 
-		System.arraycopy(elements_arr,0,ret_arr,0,size());
+		System.arraycopy(elementsStorage,0,retArray,0,size());
 
-		return ret_arr;
+		return retArray;
 	}
 
 	@Override
 	public <T1> T1[] toArray(T1[] a) {
 
-		T1[] ret_arr;
+		T1[] retArray;
 		if (a.length<size()){
-			ret_arr = Arrays.copyOf(a,size());
+			retArray = Arrays.copyOf(a,size());
 		} else {
-			ret_arr = Arrays.copyOf(a,a.length);
+			retArray = Arrays.copyOf(a,a.length);
 		}
 
 		for(int i = 0; i < size(); i++){
-			ret_arr[i] = (T1) get(i);
+			retArray[i] = (T1) get(i);
 		}
 
-		return ret_arr;
+		return retArray;
 	}
 
-	//добавление элементов в конец
 	@Override
 	public boolean add(T t) {
-		expand_arr(1);
+		expandArray(1);
 
-		elements_arr[count_elements] = t;
-		count_elements++;
+		elementsStorage[listSize] = t;
+		listSize++;
 
 		return true;
 	}
 
 	@Override
 	public T remove(int index) {
-		chk_out_of_bounds(index,false);
+		chkOutOfBounds(index,false);
 
-		T ret_obj = get(index);
+		T retRemovedObject = get(index);
 
 		if (size() == 1){
 			clear();
 		} else {
 
-			Object[] new_elem_arr = new Object[size() - 1];
+			Object[] newElementsStorage = new Object[size() - 1];
 
-			System.arraycopy(elements_arr, 0, new_elem_arr, 0, index);
-			System.arraycopy(elements_arr, index+1, new_elem_arr, index,size()-index-1);
+			System.arraycopy(elementsStorage, 0, newElementsStorage, 0, index);
+			System.arraycopy(elementsStorage, index+1, newElementsStorage, index,size()-index-1);
 
-			elements_arr = new_elem_arr;
-			count_elements = elements_arr.length;
+			elementsStorage = newElementsStorage;
+			listSize = elementsStorage.length;
 		}
 
-		return ret_obj;
+		return retRemovedObject;
 	}
 
 	@Override
 	public boolean remove(Object o) {
-		int remove_elem_indx = indexOf(o);
+		int indexRemovedElement = indexOf(o);
 
-		if (remove_elem_indx != -1){
-			remove(remove_elem_indx);
+		if (indexRemovedElement != -1){
+			remove(indexRemovedElement);
 
 			return true;
 		}
@@ -138,17 +132,17 @@ public class DIYarrayList<T> implements List<T>{
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		boolean ret_is_remove = false;
-		boolean is_remove_elem;
+		boolean retIsRemovedAll = false;
+		boolean isElementRemoved;
 
 		for (Object obj : c){
-			is_remove_elem = remove(obj);
-			if (!ret_is_remove && is_remove_elem){
-				ret_is_remove = is_remove_elem;
+			isElementRemoved = remove(obj);
+			if (!retIsRemovedAll && isElementRemoved){
+				retIsRemovedAll = isElementRemoved;
 			}
 		}
 
-		return ret_is_remove;
+		return retIsRemovedAll;
 	}
 
 	@Override
@@ -157,8 +151,8 @@ public class DIYarrayList<T> implements List<T>{
 			return true;
 		}
 
-		for (Object obj : c){
-			if (!contains(obj)){
+		for (Object containsObject : c){
+			if (!contains(containsObject)){
 				return false;
 			}
 		}
@@ -172,12 +166,12 @@ public class DIYarrayList<T> implements List<T>{
 			return false;
 		}
 
-		Object[] added_elements_arr = c.toArray();
-		expand_arr(added_elements_arr.length);
+		Object[] addedElements = c.toArray();
+		expandArray(addedElements.length);
 
-		System.arraycopy(added_elements_arr,0,elements_arr,last_elem_index()+1,added_elements_arr.length);
+		System.arraycopy(addedElements,0,elementsStorage,getLastIndex()+1,addedElements.length);
 
-		count_elements += added_elements_arr.length;
+		listSize += addedElements.length;
 
 		return true;
 
@@ -185,32 +179,32 @@ public class DIYarrayList<T> implements List<T>{
 
 	@Override
 	public void add(int index, T element) {
-		chk_out_of_bounds(index,true);
+		chkOutOfBounds(index,true);
 
-		expand_arr(1);
+		expandArray(1);
 
-		System.arraycopy(elements_arr, index, elements_arr, index + 1, size()-index);
+		System.arraycopy(elementsStorage, index, elementsStorage, index + 1, size()-index);
 
-		elements_arr[index] = element;
-		count_elements++;
+		elementsStorage[index] = element;
+		listSize++;
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends T> c) {
-		chk_out_of_bounds(index,true);
+		chkOutOfBounds(index,true);
 
 		if (c.isEmpty()) {
 			return false;
 		}
 
-		Object[] added_elements_arr = c.toArray();
-		expand_arr(added_elements_arr.length);
+		Object[] addedElements = c.toArray();
+		expandArray(addedElements.length);
 
-		System.arraycopy(elements_arr, index, elements_arr, index + added_elements_arr.length, size()-index);
+		System.arraycopy(elementsStorage, index, elementsStorage, index + addedElements.length, size()-index);
 
-		System.arraycopy(added_elements_arr, 0, elements_arr, index, added_elements_arr.length);
+		System.arraycopy(addedElements, 0, elementsStorage, index, addedElements.length);
 
-		count_elements += added_elements_arr.length;
+		listSize += addedElements.length;
 
 		return true;
 	}
@@ -222,102 +216,98 @@ public class DIYarrayList<T> implements List<T>{
 			return true;
 		}
 
-		DIYarrayList<T> retain_elems = new DIYarrayList<>();
+		DIYarrayList<T> retainedElements = new DIYarrayList<>();
 
-		for (Object obj : elements_arr){
-			if(c.contains(obj)){
-				retain_elems.add((T) obj);
+		for (Object element : elementsStorage){
+			if(c.contains(element)){
+				retainedElements.add((T) element);
 			}
 		}
 
-		elements_arr = retain_elems.toArray();
-		count_elements = retain_elems.size();
+		elementsStorage = retainedElements.toArray();
+		listSize = retainedElements.size();
 
-		return !retain_elems.isEmpty();
+		return !retainedElements.isEmpty();
 
 	}
 
 	@Override
 	public void clear() {
-		count_elements = 0;
-		elements_arr = new Object[BEGIN_LENGTH_ARRAY];
+		listSize = 0;
+		elementsStorage = new Object[BEGIN_LENGTH_ARRAY];
 	}
 
-	//проверка на выход индекса за пределы диапазона
-	private void chk_out_of_bounds(int p_index,boolean p_can_equal_size){
+	private void chkOutOfBounds(int p_index,boolean p_canEqualSize){
 		if (p_index < 0
-				|| (p_index > last_elem_index() && !p_can_equal_size)
-				|| (p_index > size() && p_can_equal_size)
+				|| (p_index > getLastIndex() && !p_canEqualSize)
+				|| (p_index > size() && p_canEqualSize)
 		){
 			throw new IndexOutOfBoundsException(p_index);
 		}
 	}
 
-	private void chk_out_of_bounds(int p_index_from, int p_index_to,boolean p_can_equal_size){
-		chk_out_of_bounds(p_index_from,p_can_equal_size);
-		chk_out_of_bounds(p_index_to,p_can_equal_size);
+	private void chkOutOfBounds(int p_indexFrom, int p_indexTo,boolean p_canEqualSize){
+		chkOutOfBounds(p_indexFrom,p_canEqualSize);
+		chkOutOfBounds(p_indexTo,p_canEqualSize);
 
-		if (p_index_from > p_index_to){
+		if (p_indexFrom > p_indexTo){
 			throw new IndexOutOfBoundsException();
 		}
 	}
 
 	@Override
 	public T get(int index) {
-		chk_out_of_bounds(index,false);
+		chkOutOfBounds(index,false);
 
-		return (T) elements_arr[index];
+		return (T) elementsStorage[index];
 	}
 
 	@Override
 	public T set(int index, T element) {
-		chk_out_of_bounds(index,false);
+		chkOutOfBounds(index,false);
 
-		T old_element = get(index);
+		T oldElement = get(index);
 
-		elements_arr[index] = element;
+		elementsStorage[index] = element;
 
-		return old_element;
+		return oldElement;
 	}
 
-	//поиск элемента
-	private int find_elem(Object p_obj, boolean p_is_find_last){
-		int index_elem = -1;
+	private int findElementIndex(Object p_findElement, boolean p_isFindLast){
+		if (!isEmpty() && p_findElement != null) {
+			int indexElement = p_isFindLast ? getLastIndex() : 0;
+			boolean isExit = false;
 
-		if (!isEmpty() && p_obj != null) {
-			int indx = p_is_find_last ? last_elem_index() : 0;
-			boolean is_exit = false;
-
-			while(!is_exit){
-				if (p_obj.equals(get(indx))){
-					return indx;
+			while(!isExit){
+				if (p_findElement.equals(get(indexElement))){
+					return indexElement;
 				}
 
-				if (p_is_find_last){
-					indx--;
+				if (p_isFindLast){
+					indexElement--;
 				} else {
-					indx++;
+					indexElement++;
 				}
 
-				is_exit = (p_is_find_last
-								&& indx <= 0)
-						|| (!p_is_find_last
-								&& indx > last_elem_index());
+				isExit = (p_isFindLast
+								&& indexElement <= 0)
+						|| (!p_isFindLast
+								&& indexElement > getLastIndex());
 
 			}
 
 		}
-		return index_elem;
+		return -1;
 	}
 
 	@Override
 	public int indexOf(Object o) {
-		return find_elem(o,false);
+		return findElementIndex(o,false);
 	}
 
 	@Override
 	public int lastIndexOf(Object o) {
-		return find_elem(o,true);
+		return findElementIndex(o,true);
 	}
 
 
@@ -342,42 +332,28 @@ public class DIYarrayList<T> implements List<T>{
 
 	@Override
 	public List<T> subList(int fromIndex, int toIndex) {
-		chk_out_of_bounds(fromIndex,toIndex,true);
+		chkOutOfBounds(fromIndex,toIndex,true);
 
-		DIYarrayList<T> sub_list = new DIYarrayList<>();
+		DIYarrayList<T> retSubList = new DIYarrayList<>();
 
 		if(fromIndex == toIndex){
-			return sub_list;
+			return retSubList;
 		}
 
-		for (int indx = fromIndex; indx < toIndex; indx++) {
-			sub_list.add(get(indx));
+		for (int indexElement = fromIndex; indexElement < toIndex; indexElement++) {
+			retSubList.add(get(indexElement));
 		}
 
-		return sub_list;
+		return retSubList;
 	}
 
 
 	@Override
 	public String toString(){
-		StringBuilder str = new StringBuilder();
-		str.append("[");
+		return "[" + Arrays.stream(elementsStorage)
+				.limit(size())
+				.map(Object::toString)
+				.collect(Collectors.joining(", ")) + "]";
 
-		if (!isEmpty()) {
-
-			for (int i = 0; i < size(); i++) {
-				str.append(elements_arr[i]);
-				if (i != last_elem_index()) {
-					str.append(", ");
-				} else {
-					str.append("]");
-				}
-
-			}
-		} else {
-			str.append("]");
-		}
-
-		return str.toString();
 	}
 }

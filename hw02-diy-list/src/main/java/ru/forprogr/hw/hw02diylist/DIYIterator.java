@@ -10,48 +10,46 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class DIYIterator<T> implements Iterator<T> {
-	//список на котором работает итератор
-	private DIYarrayList<T> list_for_iterator;
+	private DIYarrayList<T> iteratedList;
 
-	protected void set_list_for_iterator(DIYarrayList<T> p_list_for_iterator){
-		list_for_iterator = p_list_for_iterator;
+	private void setIteratedList(DIYarrayList<T> p_iteratedList){
+		iteratedList = p_iteratedList;
 	}
 
-	protected DIYarrayList<T> get_list_for_iterator(){
-		return list_for_iterator;
+	protected DIYarrayList<T> getIteratedList(){
+		return iteratedList;
 	}
 
 
-	//номер индекса текущей записи в итераторе
-	private int curr_elem_index = -1;
+	private int currentIndex = -1;
 
 	public DIYIterator(DIYarrayList<T> p_list){
-		set_list_for_iterator(p_list);
+		setIteratedList(p_list);
 	}
 
-	protected int get_curr_index(){return curr_elem_index;}
+	protected int getCurrentIndex(){return currentIndex;}
 
-	protected int get_next_index(){return curr_elem_index+1;}
+	protected int getNextIndex(){return currentIndex+1;}
 
-	protected int get_prev_index(){
+	protected int getPrevIndex(){
 
-		if (curr_elem_index<0){
+		if (currentIndex<0){
 			return -1;
 		}
-		return curr_elem_index-1;
+		return currentIndex-1;
 	}
 
-	protected int inc_index(){
-		curr_elem_index++;
-		return curr_elem_index;
+	protected int incIndex(){
+		currentIndex++;
+		return currentIndex;
 	}
 
-	protected int dec_index(){
-		curr_elem_index--;
-		if (curr_elem_index < -1){
-			curr_elem_index = -1;
+	protected int decIndex(){
+		currentIndex--;
+		if (currentIndex < -1){
+			currentIndex = -1;
 		}
-		return curr_elem_index;
+		return currentIndex;
 	}
 
 	/**
@@ -63,8 +61,8 @@ public class DIYIterator<T> implements Iterator<T> {
 	 */
 	@Override
 	public boolean hasNext() {
-		return (!get_list_for_iterator().isEmpty()
-				&& (get_next_index()<=get_list_for_iterator().last_elem_index()));
+		return (!getIteratedList().isEmpty()
+				&& (getNextIndex() <= getIteratedList().getLastIndex()));
 	}
 
 	/**
@@ -79,7 +77,7 @@ public class DIYIterator<T> implements Iterator<T> {
 			throw new NoSuchElementException();
 		}
 
-		T elem = get_list_for_iterator().get(inc_index());
+		T elem = getIteratedList().get(incIndex());
 
 		return elem;
 	}
