@@ -16,13 +16,13 @@ public class DIYListIterator<T> extends DIYIterator<T> implements ListIterator<T
 	//показывался ли вызовом next() последний элемент списка
 	private boolean is_show_last = false;
 
-	protected boolean show_first() {return is_show_first;}
-	protected void set_show_first(boolean p_is_show_first){
+	private boolean show_first() {return is_show_first;}
+	private void set_show_first(boolean p_is_show_first){
 		is_show_first = p_is_show_first;
 	}
 
-	protected boolean show_last() {return is_show_last;}
-	protected void set_show_last(boolean p_is_show_last){
+	private boolean show_last() {return is_show_last;}
+	private void set_show_last(boolean p_is_show_last){
 		is_show_last = p_is_show_last;
 	}
 
@@ -39,7 +39,7 @@ public class DIYListIterator<T> extends DIYIterator<T> implements ListIterator<T
 	 */
 	@Override
 	public boolean hasNext() {
-		return (!list_for_iterator.isEmpty()
+		return (!get_list_for_iterator().isEmpty()
 				&& !show_last());
 	}
 
@@ -57,13 +57,13 @@ public class DIYListIterator<T> extends DIYIterator<T> implements ListIterator<T
 
 		T elem;
 
-		if (get_curr_index() >= list_for_iterator.last_elem_index()){
-			elem = list_for_iterator.get(get_curr_index());
+		if (get_curr_index() >= get_list_for_iterator().last_elem_index()){
+			elem = get_list_for_iterator().get(get_curr_index());
 		} else {
-			elem = list_for_iterator.get(inc_index());
+			elem = get_list_for_iterator().get(inc_index());
 		}
 
-		set_show_last(get_curr_index() >= list_for_iterator.last_elem_index());
+		set_show_last(get_curr_index() >= get_list_for_iterator().last_elem_index());
 
 		if(!show_first()){
 			set_show_first(get_curr_index() >= 0);
@@ -84,7 +84,7 @@ public class DIYListIterator<T> extends DIYIterator<T> implements ListIterator<T
 	 */
 	@Override
 	public boolean hasPrevious() {
-		return (!list_for_iterator.isEmpty()
+		return (!get_list_for_iterator().isEmpty()
 				&& (get_prev_index() >= 0
 					|| show_first()));
 	}
@@ -109,14 +109,14 @@ public class DIYListIterator<T> extends DIYIterator<T> implements ListIterator<T
 		}
 
 		if (get_curr_index() == 0 && show_first()){
-			elem = list_for_iterator.get(get_curr_index());
+			elem = get_list_for_iterator().get(get_curr_index());
 			dec_index();
 			set_show_first(false);
-		} else if(get_curr_index() == list_for_iterator.last_elem_index() && show_last()) {
-			elem = list_for_iterator.get(get_curr_index());
+		} else if(get_curr_index() == get_list_for_iterator().last_elem_index() && show_last()) {
+			elem = get_list_for_iterator().get(get_curr_index());
 			set_show_last(false);
 		} else {
-			elem = list_for_iterator.get(dec_index());
+			elem = get_list_for_iterator().get(dec_index());
 		}
 
 		return elem;
@@ -134,7 +134,7 @@ public class DIYListIterator<T> extends DIYIterator<T> implements ListIterator<T
 	@Override
 	public int nextIndex() {
 		if (!hasNext()) {
-			return list_for_iterator.size();
+			return get_list_for_iterator().size();
 		}
 		return get_next_index();
 	}
@@ -150,7 +150,7 @@ public class DIYListIterator<T> extends DIYIterator<T> implements ListIterator<T
 	 */
 	@Override
 	public int previousIndex() {
-		if(get_curr_index() == list_for_iterator.last_elem_index() && show_last()){
+		if(get_curr_index() == get_list_for_iterator().last_elem_index() && show_last()){
 			return get_curr_index();
 		}
 		return get_prev_index();
@@ -181,7 +181,7 @@ public class DIYListIterator<T> extends DIYIterator<T> implements ListIterator<T
 		if (!show_first() ){
 			throw new IllegalStateException();
 		}
-		list_for_iterator.set(get_curr_index(),t);
+		get_list_for_iterator().set(get_curr_index(),t);
 	}
 
 	/**

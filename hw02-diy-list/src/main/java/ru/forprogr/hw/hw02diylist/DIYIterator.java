@@ -11,13 +11,22 @@ import java.util.NoSuchElementException;
 
 public class DIYIterator<T> implements Iterator<T> {
 	//список на котором работает итератор
-	protected DIYarrayList<T> list_for_iterator;
+	private DIYarrayList<T> list_for_iterator;
+
+	protected void set_list_for_iterator(DIYarrayList<T> p_list_for_iterator){
+		list_for_iterator = p_list_for_iterator;
+	}
+
+	protected DIYarrayList<T> get_list_for_iterator(){
+		return list_for_iterator;
+	}
+
 
 	//номер индекса текущей записи в итераторе
 	private int curr_elem_index = -1;
 
 	public DIYIterator(DIYarrayList<T> p_list){
-		list_for_iterator = p_list;
+		set_list_for_iterator(p_list);
 	}
 
 	protected int get_curr_index(){return curr_elem_index;}
@@ -54,8 +63,8 @@ public class DIYIterator<T> implements Iterator<T> {
 	 */
 	@Override
 	public boolean hasNext() {
-		return (!list_for_iterator.isEmpty()
-				&& (get_next_index()<=list_for_iterator.last_elem_index()));
+		return (!get_list_for_iterator().isEmpty()
+				&& (get_next_index()<=get_list_for_iterator().last_elem_index()));
 	}
 
 	/**
@@ -70,7 +79,7 @@ public class DIYIterator<T> implements Iterator<T> {
 			throw new NoSuchElementException();
 		}
 
-		T elem = list_for_iterator.get(inc_index());
+		T elem = get_list_for_iterator().get(inc_index());
 
 		return elem;
 	}
