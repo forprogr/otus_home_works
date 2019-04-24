@@ -114,16 +114,8 @@ public class DIYarrayList<T> implements List<T>{
 
 			Object[] new_elem_arr = new Object[size() - 1];
 
-			if (index == 0) { // в начале массива
-				System.arraycopy(elements_arr, index+1, new_elem_arr, 0, new_elem_arr.length);
-
-			} else if (index == last_elem_index()){ // в конце массива
-				System.arraycopy(elements_arr, 0, new_elem_arr, 0, new_elem_arr.length);
-
-			} else { // внутри массива
-				System.arraycopy(elements_arr, 0, new_elem_arr, 0, index);
-				System.arraycopy(elements_arr, index+1, new_elem_arr, index,size()-index-1);
-			}
+			System.arraycopy(elements_arr, 0, new_elem_arr, 0, index);
+			System.arraycopy(elements_arr, index+1, new_elem_arr, index,size()-index-1);
 
 			elements_arr = new_elem_arr;
 			count_elements = elements_arr.length;
