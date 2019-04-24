@@ -285,19 +285,27 @@ public class DIYarrayList<T> implements List<T>{
 		int index_elem = -1;
 
 		if (!isEmpty() && p_obj != null) {
-			if (p_is_find_last){
-				for(int indx = last_elem_index(); indx >= 0; indx--){
-					if (p_obj.equals(get(indx))){
-						return indx;
-					}
+			int indx = p_is_find_last ? last_elem_index() : 0;
+			boolean is_exit = false;
+
+			while(!is_exit){
+				if (p_obj.equals(get(indx))){
+					return indx;
 				}
-			} else {
-				for (int indx = 0; indx < size(); indx++) {
-					if (p_obj.equals(get(indx))){
-						return indx;
-					}
+
+				if (p_is_find_last){
+					indx--;
+				} else {
+					indx++;
 				}
+
+				is_exit = (p_is_find_last
+								&& indx <= 0)
+						|| (!p_is_find_last
+								&& indx > last_elem_index());
+
 			}
+
 		}
 		return index_elem;
 	}
