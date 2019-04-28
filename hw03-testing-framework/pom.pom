@@ -11,10 +11,11 @@
 	</parent>
 
 	<properties>
-		<my.artifactId>hw03-testing-framework</my.artifactId>
-		<my.module.name>${my.artifactId}</my.module.name>
+		<my.module.name>hw03-testing-framework</my.module.name>
+		<my.package.main>hw03testingframework</my.package.main>
 
-		<my.main.class>${parent.groupId}.${my.module.name}.Main</my.main.class>
+		<my.artifactId>${my.module.name}</my.artifactId>
+		<my.main.class>${parent.groupId}.${my.package.main}.Main</my.main.class>
 		<my.build.name>${project.name}</my.build.name>
 	</properties>
 
@@ -28,13 +29,13 @@
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>5.3.2</version>
-			<scope>test</scope>
+			<!--<scope>test</scope>-->
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-params</artifactId>
 			<version>5.3.2</version>
-			<scope>test</scope>
+			<!--<scope>test</scope>-->
 		</dependency>
 	</dependencies>
 

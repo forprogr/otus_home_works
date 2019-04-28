@@ -9,6 +9,8 @@ package ru.forprogr.hw.hw03testingframework;
 public class Main {
 
 	public static void main(String[] args){
-		System.out.println("hw03testingframework");
+		//запускаю на немного переделанным классом тестирования из Домашнего задания #2
+		TestsRunner testsRunner = new TestsRunner("ru.forprogr.hw.hw03testingframework.DIYarrayListTest");
+		testsRunner.runTests();
 	}
 }
