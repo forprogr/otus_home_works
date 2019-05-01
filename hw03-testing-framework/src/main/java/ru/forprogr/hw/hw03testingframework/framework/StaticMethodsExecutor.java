@@ -1,62 +1,56 @@
-package ru.forprogr.hw.hw03testingframework;
+package ru.forprogr.hw.hw03testingframework.framework;
 //-----------------------------------------------------------------------------
 // Author:    Nemti
-// Created:   28.04.2019 20:16
+// Created:   01.05.2019 13:16
 // Copyright: (c) Nemti 2019
 // Licence:   GPL 3.0
 //-----------------------------------------------------------------------------
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.util.List;
 
-public class MethodsExecutor {
-	private Object testedObject;
+public class StaticMethodsExecutor {
+
+	private boolean stopWhenError;
 
 	private boolean resultRunTest;
 	private StringBuffer errorMessages;
 
-	public MethodsExecutor(Class<?> p_testedCLass){
+	public StaticMethodsExecutor(boolean p_stopWhenError){
 		errorMessages = new StringBuffer();
 		resultRunTest = true;
-		createTestedObject(p_testedCLass);
+		stopWhenError = p_stopWhenError;
 	}
 
-	private void createTestedObject(Class<?> p_testedCLass){
-		try {
-			Constructor<?> constructor = p_testedCLass.getConstructor();
-			testedObject = constructor.newInstance();
-		} catch (NoSuchMethodException
-				| InstantiationException
-				| IllegalAccessException
-				| InvocationTargetException e) {
-			addError("Error when create object: "+p_testedCLass.getCanonicalName());
-			addError(e.toString());
-		}
-
-	}
 
 	public void executeMethod(Method p_method){
 		try {
-			p_method.invoke(testedObject);
-		} catch (IllegalAccessException | InvocationTargetException e) {
+			p_method.invoke(null);
+		} catch (IllegalAccessException e){
 			addError("Error when execute method: "+p_method.getName());
 			addError(e.toString());
+		} catch (InvocationTargetException e) {
+			addError("Error when execute method: "+p_method.getName());
+			addError(e.getCause().toString());
 		}
 	}
 
-	public void executeMethods(ArrayList<Method> p_methods){
+	public void executeMethods(List<Method> p_methods){
 		for(Method method : p_methods){
 			executeMethod(method);
+
+			if (!resultRunTest && stopWhenError){
+				return;
+			}
 		}
 	}
 
-	private void addError(String p_errorMessage){
+	public void addError(String p_errorMessage){
 		if (errorMessages.length() != 0){
 			errorMessages.append("\n");
 		}
-		errorMessages.append("\t");
+		errorMessages.append("\t\t");
 		errorMessages.append(p_errorMessage);
 		resultRunTest = false;
 	}
@@ -67,6 +61,10 @@ public class MethodsExecutor {
 
 	public boolean isRunOk(){
 		return resultRunTest;
+	}
+
+	public boolean isBreakRun(){
+		return !isRunOk() && stopWhenError;
 	}
 
 	public void printRunResult(){

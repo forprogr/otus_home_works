@@ -1,4 +1,4 @@
-package ru.forprogr.hw.hw03testingframework;
+package ru.forprogr.hw.hw03testingframework.framework;
 //-----------------------------------------------------------------------------
 // Author:    Nemti
 // Created:   28.04.2019 17:04
@@ -7,7 +7,7 @@ package ru.forprogr.hw.hw03testingframework;
 //-----------------------------------------------------------------------------
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.util.List;
 
 public class TestExecutor extends MethodsExecutor{
 	private String testMethodName;
@@ -16,17 +16,22 @@ public class TestExecutor extends MethodsExecutor{
 		testMethodName = p_method.getName();
 	}
 
-	public TestExecutor(Class<?> p_testedCLass){
-		super(p_testedCLass);
+	public TestExecutor(Class<?> p_testedCLass,boolean p_stopWhenError){
+		super(p_testedCLass,p_stopWhenError);
 	}
 
 	public void executeTest(Method p_testMethod
-							, ArrayList<Method> p_methodsBeforeTest
-							, ArrayList<Method> p_methodsAfterTest){
+							, List<Method> p_methodsBeforeTest
+							, List<Method> p_methodsAfterTest){
+		System.out.println("\n[TESTED] --> method: "+p_testMethod);
+
 		executeMethods(p_methodsBeforeTest);
 
 		setTestMethodName(p_testMethod);
-		executeMethod(p_testMethod);
+
+		if (!isBreakRun()) {
+			executeMethod(p_testMethod);
+		}
 
 		executeMethods(p_methodsAfterTest);
 	}
@@ -34,9 +39,9 @@ public class TestExecutor extends MethodsExecutor{
 	@Override
 	public void printRunResult(){
 		if(isRunOk()){
-			System.out.println("[OK] === Running test method: "+testMethodName);
+			System.out.println("\t[OK] === Running test method: "+testMethodName);
 		} else {
-			System.out.println("[ERROR] *** Running test method: "+testMethodName);
+			System.out.println("\t[ERROR] *** Running test method: "+testMethodName);
 			System.out.println(getErrors());
 		}
 	}

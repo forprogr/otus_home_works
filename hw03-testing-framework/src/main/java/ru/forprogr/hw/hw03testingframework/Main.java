@@ -6,11 +6,13 @@ package ru.forprogr.hw.hw03testingframework;
 // Licence:   GPL 3.0
 //-----------------------------------------------------------------------------
 
+import ru.forprogr.hw.hw03testingframework.framework.*;
+
 public class Main {
 
 	public static void main(String[] args){
 		//запускаю на немного переделанным классом тестирования из Домашнего задания #2
-		TestsRunner testsRunner = new TestsRunner("ru.forprogr.hw.hw03testingframework.DIYarrayListTest");
+		TestsRunner testsRunner = new TestsRunner("ru.forprogr.hw.hw03testingframework.DIYarrayListTest",true);
 		testsRunner.runTests();
 	}
 }

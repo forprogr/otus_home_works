@@ -15,7 +15,7 @@
 		<my.package.main>hw03testingframework</my.package.main>
 
 		<my.artifactId>${my.module.name}</my.artifactId>
-		<my.main.class>${parent.groupId}.${my.package.main}.Main</my.main.class>
+		<my.main.class>${project.parent.groupId}.${my.package.main}.Main</my.main.class>
 		<my.build.name>${project.name}</my.build.name>
 	</properties>
 

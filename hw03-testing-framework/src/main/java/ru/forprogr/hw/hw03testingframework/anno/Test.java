@@ -1,7 +1,7 @@
-package ru.forprogr.hw.hw03testingframework;
+package ru.forprogr.hw.hw03testingframework.anno;
 //-----------------------------------------------------------------------------
 // Author:    Nemti
-// Created:   28.04.2019 15:56
+// Created:   28.04.2019 15:51
 // Copyright: (c) Nemti 2019
 // Licence:   GPL 3.0
 //-----------------------------------------------------------------------------
@@ -12,5 +12,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface AfterTest {
+public @interface Test {
 }

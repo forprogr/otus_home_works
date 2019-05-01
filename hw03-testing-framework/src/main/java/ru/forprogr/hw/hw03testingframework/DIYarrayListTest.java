@@ -9,7 +9,8 @@ package ru.forprogr.hw.hw03testingframework;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import ru.forprogr.hw.hw03testingframework.anno.*;
 
 public class DIYarrayListTest {
 
@@ -20,12 +21,19 @@ public class DIYarrayListTest {
 		@BeforeAll
 		public static void beforeClass() {
 			System.out.println("\nТест соответствия реализации DIYarrayList эталону");
+			//throw new NullPointerException("beforeClass - err"); //DO error
+		}
+
+		@BeforeAll
+		public void beforeClass2() {
+			System.out.println("\nне статичный");
+			//throw new NullPointerException("beforeClass - err"); //DO error
 		}
 
 
 		@BeforeTest
 		public void beforeTest() {
-
+			System.out.println("Before Test init lists");
 
 			diy_list = new ArrayList<>();
 			arr_list = new ArrayList<>();
@@ -37,6 +45,8 @@ public class DIYarrayListTest {
 				arr_list.add("Str--"+i);
 				src_list.add("--test-"+i+"-");
 			}
+
+			//throw new NullPointerException("beforeTest - err"); //DO error
 		}
 
 		@AfterTest
@@ -47,7 +57,7 @@ public class DIYarrayListTest {
 			if (arr_list!=null) {
 				arr_list.clear();
 			}
-			//System.out.println("After Test clear lists");
+			System.out.println("After Test clear lists");
 		}
 
 		@AfterAll
