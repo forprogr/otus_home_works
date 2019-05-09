@@ -125,13 +125,15 @@ public class LogClassTransformer extends CashedClassFileTransformer {
 
 		classReader.accept(findLogVisitor, Opcodes.ASM5);
 
-	//	RenameMethodsWithLog renameMethodsVisitor = new RenameMethodsWithLog(Opcodes.ASM5, classWriter, classDescription);
+		RenameMethodsWithLog renameMethodsVisitor = new RenameMethodsWithLog(Opcodes.ASM5, classWriter, classDescription);
 
-	//	classReader.accept(renameMethodsVisitor, Opcodes.ASM5);
+		classReader.accept(renameMethodsVisitor, Opcodes.ASM5);
+
+		LogMethodsCreator logMethodsCreator = new LogMethodsCreator(classWriter,classDescription);
 
 		byte[] finalClass = classWriter.toByteArray();
 
-		try (OutputStream fos = new FileOutputStream("proxy.class")) {
+		try (OutputStream fos = new FileOutputStream("proxy2.class")) {
 			fos.write(finalClass);
 		} catch (Exception e) {
 			e.printStackTrace();

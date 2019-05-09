@@ -22,5 +22,19 @@ public class MethodParamDescription {
 		startLabel = p_startLabel;
 	}
 
+	public String getParamType() {
+		return paramType;
+	}
 
+	public String getParamName() {
+		return paramName;
+	}
+
+	public int getParamIndex() {
+		return paramIndex;
+	}
+
+	public Label getStartLabel() {
+		return startLabel;
+	}
 }

@@ -19,7 +19,7 @@
 		<my.build.name>${my.module.name}</my.build.name>
 	</properties>
 
-	<artifactId>${my.artifactId}</artifactId>
+	<artifactId>hw03-testing-framework</artifactId>
 	<name>${my.module.name}</name>
 
 	<packaging>jar</packaging>

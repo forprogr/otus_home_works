@@ -48,6 +48,38 @@ public class MethodDescription {
 
 	}
 
+	public List<MethodParamDescription> getMethodParams() {
+		return methodParams;
+	}
+
+	public int getMethodAccess() {
+		return methodAccess;
+	}
+
+	public String getMethodName() {
+		return methodName;
+	}
+
+	public String getMethodDescriptor() {
+		return methodDescriptor;
+	}
+
+	public String getMethodSignature() {
+		return methodSignature;
+	}
+
+	public String[] getMethodExceptions() {
+		return methodExceptions;
+	}
+
+	public int getMethodMaxStack() {
+		return methodMaxStack;
+	}
+
+	public int getMethodMaxLocals() {
+		return methodMaxLocals;
+	}
+
 	public String getMethodProxyName(){
 		return methodProxyName;
 	}
