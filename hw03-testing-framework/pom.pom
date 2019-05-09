@@ -16,7 +16,7 @@
 
 		<my.artifactId>${my.module.name}</my.artifactId>
 		<my.main.class>${project.parent.groupId}.${my.package.main}.Main</my.main.class>
-		<my.build.name>${project.name}</my.build.name>
+		<my.build.name>${my.module.name}</my.build.name>
 	</properties>
 
 	<artifactId>${my.artifactId}</artifactId>
@@ -56,7 +56,9 @@
 							<transformers>
 								<transformer
 										implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>${my.main.class}</mainClass>
+									<manifestEntries>
+										<Main-Class>${my.main.class}</Main-Class>
+									</manifestEntries>
 								</transformer>
 							</transformers>
 						</configuration>

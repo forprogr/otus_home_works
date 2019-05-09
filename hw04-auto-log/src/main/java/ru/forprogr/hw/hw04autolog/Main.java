@@ -9,5 +9,9 @@ package ru.forprogr.hw.hw04autolog;
 public class Main {
 	public static void main(String[] args){
 		System.out.println("ru.forprogr.hw.hw04autolog");
+
+		TestLogging testLogging = new TestLogging();
+		testLogging.calculation(22,"test",2.2);
+		//testLogging.calculation2(22,"test",2.2);
 	}
 }
