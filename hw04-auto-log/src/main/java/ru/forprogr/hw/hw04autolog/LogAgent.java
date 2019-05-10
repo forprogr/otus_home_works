@@ -12,7 +12,7 @@ import ru.forprogr.hw.hw04autolog.transformer.*;
 public class LogAgent {
 
 	public static void premain(String agentArgs, Instrumentation inst) {
-		System.out.println("premain");
+		System.out.println("\n<i> Start premain(String agentArgs, Instrumentation inst) - ru.forprogr.hw.hw04autolog");
 
 		LogClassTransformer logClassTransformer = new LogClassTransformer();
 		logClassTransformer.addSkippedClassNames("java");

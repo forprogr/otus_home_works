@@ -7,6 +7,7 @@ package ru.forprogr.hw.hw04autolog.descriptions;
 //-----------------------------------------------------------------------------
 
 import org.objectweb.asm.Label;
+import org.objectweb.asm.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,9 @@ import java.util.List;
 public class MethodDescription {
 
 	private List<MethodParamDescription> methodParams;
+	private List<MethodParamDescription> methodVars;
+
+	private MethodParamDescription returnMethodParam;
 
 	private Label methodParamStartLabel;
 	private int methodAccess;
@@ -25,6 +29,9 @@ public class MethodDescription {
 
 	private int methodMaxStack;
 	private int methodMaxLocals;
+
+	private boolean haveParams;
+	private boolean haveReturnParam;
 
 	public MethodDescription(
 			String p_methodName
@@ -45,7 +52,42 @@ public class MethodDescription {
 		methodMaxLocals = 0;
 
 		methodParams = new ArrayList<>();
+		methodVars = new ArrayList<>();
 
+		returnMethodParam = null;
+		haveParams = Type.getArgumentTypes(p_methodDescriptor).length > 0;
+		haveReturnParam = Type.getReturnType(p_methodDescriptor) != Type.VOID_TYPE;
+	}
+
+	public boolean isHaveParams() {
+		return haveParams;
+	}
+
+	public boolean isHaveReturnParam() {
+		return haveReturnParam;
+	}
+
+	public List<MethodParamDescription> getMethodVars() {
+		return methodVars;
+	}
+
+	private void createReturnParamDescription(){
+		if (haveReturnParam){
+			addNewVariable();
+			returnMethodParam = new MethodParamDescription("retValue"
+														,Type.getReturnType(methodDescriptor).getDescriptor()
+														,null
+														,methodMaxLocals
+														,new Label()
+														,new Label());
+		}
+	}
+
+	public MethodParamDescription getReturnMethodParam() {
+		if (haveReturnParam && returnMethodParam == null){
+			createReturnParamDescription();
+		}
+		return returnMethodParam;
 	}
 
 	public List<MethodParamDescription> getMethodParams() {
@@ -70,6 +112,14 @@ public class MethodDescription {
 
 	public String[] getMethodExceptions() {
 		return methodExceptions;
+	}
+
+	private void addNewVariable(){
+		methodMaxLocals++;
+
+		if (methodMaxLocals > methodMaxStack*4){
+			methodMaxStack ++;
+		}
 	}
 
 	public int getMethodMaxStack() {
@@ -101,6 +151,10 @@ public class MethodDescription {
 	}
 
 	public boolean isMethodParam(Label p_startLabel){
+		if (!haveParams && !methodParams.isEmpty()){
+			return false;
+		}
+
 		if (methodParams.isEmpty()){
 			methodParamStartLabel = p_startLabel;
 			return true;
@@ -108,15 +162,17 @@ public class MethodDescription {
 		return methodParamStartLabel.equals(p_startLabel);
 	}
 
-	public void addMethodParam(String p_paramName,String p_paramType,String p_signature,int p_paramIndex,Label p_startLabel,Label p_endLabel){
-		if (isMethodParam(p_startLabel)) {
-			MethodParamDescription paramDescription = new MethodParamDescription(p_paramName
+	public void addMethodParamOrVar(String p_paramName,String p_paramType,String p_signature,int p_paramIndex,Label p_startLabel,Label p_endLabel){
+		MethodParamDescription elemDescription = new MethodParamDescription(p_paramName
 																				,p_paramType
 																				,p_signature
 																				,p_paramIndex
 																				,p_startLabel
 																				,p_endLabel);
-			methodParams.add(paramDescription);
+		if (isMethodParam(p_startLabel)) {
+			methodParams.add(elemDescription);
+		} else {
+			methodVars.add(elemDescription);
 		}
 	}
 }

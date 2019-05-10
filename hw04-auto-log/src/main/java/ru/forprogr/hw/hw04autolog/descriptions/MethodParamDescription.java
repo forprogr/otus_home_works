@@ -17,7 +17,12 @@ public class MethodParamDescription {
 	private Label endLabel;
 	private String signature;
 
-	public MethodParamDescription(String p_paramName,String p_paramType,String p_signature, int p_paramIndex,Label p_startLabel,Label p_endLabel){
+	public MethodParamDescription(String p_paramName
+									,String p_paramType
+									,String p_signature
+									,int p_paramIndex
+									,Label p_startLabel
+									,Label p_endLabel){
 		paramName = p_paramName;
 		paramType = p_paramType;
 		paramIndex = p_paramIndex;

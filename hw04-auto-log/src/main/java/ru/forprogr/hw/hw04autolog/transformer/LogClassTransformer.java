@@ -21,15 +21,13 @@ public class LogClassTransformer extends CashedClassFileTransformer {
 		super();
 	}
 
-	private byte[] findLogAnnonation(ClassDescription p_classDescription, byte[] p_classByteCodes){
+	private void findLogAnnonation(ClassDescription p_classDescription, byte[] p_classByteCodes){
 		ClassReader classReader = new ClassReader(p_classByteCodes);
 		ClassWriter classWriter = new ClassWriter(classReader, 0);
 
 		FindLogAnnotations findLogVisitor = new FindLogAnnotations(Opcodes.ASM5, classWriter, p_classDescription);
 
 		classReader.accept(findLogVisitor, Opcodes.ASM5);
-
-		return classWriter.toByteArray();
 	}
 
 	private byte[] renameAndCreateMethodsWithLog(ClassDescription p_classDescription, byte[] p_classByteCodes){
@@ -61,12 +59,14 @@ public class LogClassTransformer extends CashedClassFileTransformer {
 			, Class<?> p_classBeingRedefined
 			, ProtectionDomain p_protectionDomain
 			, byte[] p_classByteCodes){
+
 		ClassDescription classDescription = new ClassDescription(p_className);
 
-		byte[] classByteCodes = findLogAnnonation(classDescription,p_classByteCodes);
+		findLogAnnonation(classDescription,p_classByteCodes);
 
 		if(!classDescription.getMethods().isEmpty()) {
-			classByteCodes = renameAndCreateMethodsWithLog(classDescription, p_classByteCodes);
+
+			byte[] classByteCodes = renameAndCreateMethodsWithLog(classDescription, p_classByteCodes);
 
 			writeToFileModifedClass(p_className, classByteCodes);
 

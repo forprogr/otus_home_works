@@ -6,12 +6,17 @@ package ru.forprogr.hw.hw04autolog;
 // Licence:   GPL 3.0
 //-----------------------------------------------------------------------------
 
+//Run:
+//> java -javaagent:hw04-auto-log.jar -jar hw04-auto-log.jar
+
 public class Main {
 	public static void main(String[] args){
-		System.out.println("ru.forprogr.hw.hw04autolog");
+		System.out.println("\n<i> Start main(String[] args) - ru.forprogr.hw.hw04autolog");
 
 		TestLogging testLogging = new TestLogging();
 		testLogging.calculation(22,"test",2.2);
-		//testLogging.calculation2(22,"test",2.2);
+		testLogging.calculationReturn(33,"test return1",3.3);
+		testLogging.calculationNoParams();
+		testLogging.calculationNoParamsVoid();
 	}
 }

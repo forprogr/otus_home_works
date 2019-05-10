@@ -29,9 +29,13 @@ public class FindMethodLogAnnotations extends MethodVisitor {
 		haveLogAnnotation = false;
 	}
 
+	public String descriptorToClassName(String p_descriptor){
+		return p_descriptor.replaceAll("(^[L])|([;]$)","").replaceAll("/",".");
+	}
+
 	@Override
 	public AnnotationVisitor visitAnnotation(final String descriptor, final boolean visible) {
-		String annotationClassName = classDescription.descriptorToClassName(descriptor);
+		String annotationClassName = descriptorToClassName(descriptor);
 
 		if (!haveLogAnnotation) {
 			haveLogAnnotation = Log.class.getName().equals(annotationClassName);
@@ -57,7 +61,7 @@ public class FindMethodLogAnnotations extends MethodVisitor {
 			final Label end,
 			final int index) {
 
-		methodDescription.addMethodParam(name,descriptor,signature,index,start,end);
+		methodDescription.addMethodParamOrVar(name,descriptor,signature,index,start,end);
 
 		mv.visitLocalVariable(name, descriptor, signature, start, end, index);
 	}

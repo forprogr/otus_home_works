@@ -30,9 +30,9 @@ public class FindLogAnnotations extends ClassVisitor {
 			MethodDescription methodDescription = new MethodDescription(name, access, descriptor, signature, exceptions);
 
 			methodVisitor = new FindMethodLogAnnotations(api
-					, methodVisitor
-					, classDescription
-					, methodDescription);
+														, methodVisitor
+														, classDescription
+														, methodDescription);
 		}
 		return methodVisitor;
 
