@@ -22,11 +22,7 @@ public class LogMethodsCreator {
 	public LogMethodsCreator(ClassWriter p_classWriter, ClassDescription p_classDescription){
 		classWriter = p_classWriter;
 		classDescription = p_classDescription;
-		createLogMethods();
-
 	}
-
-
 
 	private MethodVisitor getNewMethod(MethodDescription p_methodDescription){
 		return classWriter.visitMethod(p_methodDescription.getMethodAccess()
@@ -65,7 +61,7 @@ public class LogMethodsCreator {
 		p_newMethod.visitInvokeDynamicInsn("makeConcatWithConstants"
 				, "("+p_paramDescription.getParamType()+")Ljava/lang/String;"
 				, p_concatFunctionHandle
-				, "logged param "+p_paramDescription.getParamName()+": \u0001");
+				, "\tlogged param "+p_paramDescription.getParamName()+": \u0001");
 		p_newMethod.visitMethodInsn(Opcodes.INVOKEVIRTUAL
 				, "java/io/PrintStream"
 				, "println"
@@ -83,12 +79,27 @@ public class LogMethodsCreator {
 		}
 	}
 
-	private void createLogMethods(){
+	public void createLogMethods(){
 		for(MethodDescription methodDescription : classDescription.getMethods()){
 
 			MethodVisitor newMethod = getNewMethod(methodDescription);
+			newMethod.visitCode();
 
-			//printLogParams(methodDescription,newMethod);
+//
+//			for(MethodParamDescription paramDescription : methodDescription.getMethodParams()){
+//				newMethod.visitLocalVariable(paramDescription.getParamName()
+//											,paramDescription.getParamType()
+//											,paramDescription.getSignature()
+//											,paramDescription.getStartLabel()
+//											,paramDescription.getEndLabel()
+//											,paramDescription.getParamIndex());
+//
+//
+//			}
+
+			//todo
+			printLogParams(methodDescription,newMethod);
+
 
 			loadMethodParams(methodDescription,newMethod);
 
@@ -117,72 +128,4 @@ public class LogMethodsCreator {
 		return new Handle(H_INVOKESTATIC,owner,"makeConcatWithConstants",descriptor,false);
 	}
 
-
-////
-//
-//
-//	//@Override
-//	public void visitEnd() {
-////		mv.visitEnd();
-//
-//		if(haveLogAnnotation){
-////			mv = classVisitor.visitMethod(methodAccess
-////					, methodProxyName
-////					, methodDescriptor
-////					, methodSignature
-////					, methodExceptions);
-//////			mv.visitInsn(Opcodes.RETURN);
-//////			mv.visitMaxs(methodMaxStack, methodMaxLocals);
-////			mv.visitEnd();
-//
-//			MethodVisitor newMethod = classVisitor.visitMethod(methodAccess
-//																, methodName+"2"
-//																, methodDescriptor
-//																, methodSignature
-//																, null);
-//			Handle concatHandle = getConcatFunctionHandle();
-//
-//			for (MethodParam methodParam : paramsMethod){
-//				if (methodParam.paramIndex != 0){
-//					printLogParam(methodParam, newMethod,concatHandle);
-//				}
-//			}
-//
-////			for (MethodParam methodParam : paramsMethod){
-////				if (methodParam.paramIndex != 0) {
-////					loadParam(methodParam, newMethod);
-////
-////					newMethod.visitMethodInsn(Opcodes.INVOKEVIRTUAL
-////							, "java/io/PrintStream"
-////							, "println"
-////							, "(Ljava/lang/String;)V"
-////							, false);
-////				}
-////			}
-//
-//			for (MethodParam methodParam : paramsMethod){
-//				loadParam(methodParam,newMethod);
-//
-//			}
-//
-//			newMethod.visitMethodInsn(Opcodes.INVOKEVIRTUAL
-//										,classVisitor.getClassName()
-//										, methodName //methodProxyName
-//										, methodDescriptor
-//										, false);
-////
-//			newMethod.visitInsn(Opcodes.RETURN);
-//			newMethod.visitMaxs(methodMaxStack, methodMaxLocals);
-//			newMethod.visitEnd();
-//
-//
-//
-//			System.out.println("WOW");
-//
-//
-//		}
-//
-//		//mv.visitEnd();
-//
-//	}
 }

@@ -57,7 +57,7 @@ public class FindMethodLogAnnotations extends MethodVisitor {
 			final Label end,
 			final int index) {
 
-		methodDescription.addMethodParam(name,descriptor,index,start);
+		methodDescription.addMethodParam(name,descriptor,signature,index,start,end);
 
 		mv.visitLocalVariable(name, descriptor, signature, start, end, index);
 	}

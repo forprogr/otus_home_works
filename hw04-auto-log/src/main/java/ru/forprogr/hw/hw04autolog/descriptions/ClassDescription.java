@@ -33,11 +33,11 @@ public class ClassDescription {
 	}
 
 	public MethodDescription getMethod(String p_methodKey){
-		if (!classMethods.isEmpty() && classMethods.containsKey(p_methodKey)) {
+		//if (!classMethods.isEmpty() && classMethods.containsKey(p_methodKey)) {
 			return classMethods.get(p_methodKey);
-		} else {
-			return null;
-		}
+//		} else {
+//			return null;
+//		}
 	}
 
 	public String descriptorToClassName(String p_descriptor){

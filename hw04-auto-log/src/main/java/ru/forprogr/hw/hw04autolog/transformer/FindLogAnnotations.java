@@ -19,25 +19,23 @@ public class FindLogAnnotations extends ClassVisitor {
 		super(p_api,p_classVisitor);
 
 		classDescription = p_classDescription;
+
 	}
-
-
 
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
 		MethodVisitor methodVisitor = cv.visitMethod(access, name, descriptor, signature, exceptions);
 
-		if (methodVisitor != null){
-			MethodDescription methodDescription = new MethodDescription(name,access,descriptor,signature,exceptions);
-
+		if (methodVisitor != null) {
+			MethodDescription methodDescription = new MethodDescription(name, access, descriptor, signature, exceptions);
 
 			methodVisitor = new FindMethodLogAnnotations(api
-												,methodVisitor
-												,classDescription
-												,methodDescription);
+					, methodVisitor
+					, classDescription
+					, methodDescription);
 		}
-
 		return methodVisitor;
+
 	}
 
 }

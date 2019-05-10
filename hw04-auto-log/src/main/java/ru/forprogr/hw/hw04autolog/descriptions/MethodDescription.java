@@ -108,12 +108,14 @@ public class MethodDescription {
 		return methodParamStartLabel.equals(p_startLabel);
 	}
 
-	public void addMethodParam(String p_paramName,String p_paramType,int p_paramIndex,Label p_startLabel){
+	public void addMethodParam(String p_paramName,String p_paramType,String p_signature,int p_paramIndex,Label p_startLabel,Label p_endLabel){
 		if (isMethodParam(p_startLabel)) {
 			MethodParamDescription paramDescription = new MethodParamDescription(p_paramName
 																				,p_paramType
+																				,p_signature
 																				,p_paramIndex
-																				,p_startLabel);
+																				,p_startLabel
+																				,p_endLabel);
 			methodParams.add(paramDescription);
 		}
 	}

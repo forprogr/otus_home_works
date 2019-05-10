@@ -14,12 +14,20 @@ public class MethodParamDescription {
 	private String paramName;
 	private int paramIndex;
 	private Label startLabel;
+	private Label endLabel;
+	private String signature;
 
-	public MethodParamDescription(String p_paramName,String p_paramType,int p_paramIndex,Label p_startLabel){
+	public MethodParamDescription(String p_paramName,String p_paramType,String p_signature, int p_paramIndex,Label p_startLabel,Label p_endLabel){
 		paramName = p_paramName;
 		paramType = p_paramType;
 		paramIndex = p_paramIndex;
 		startLabel = p_startLabel;
+		endLabel = p_endLabel;
+		signature = p_signature;
+	}
+
+	public String getSignature() {
+		return signature;
 	}
 
 	public String getParamType() {
@@ -36,5 +44,9 @@ public class MethodParamDescription {
 
 	public Label getStartLabel() {
 		return startLabel;
+	}
+
+	public Label getEndLabel() {
+		return endLabel;
 	}
 }
