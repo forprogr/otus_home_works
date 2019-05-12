@@ -14,8 +14,8 @@ import java.util.List;
 
 public class MethodDescription {
 
-	private List<MethodParamDescription> methodParams;
-	private List<MethodParamDescription> methodVars;
+	final private List<MethodParamDescription> methodParams;
+	final private List<MethodParamDescription> methodVars;
 
 	private MethodParamDescription returnMethodParam;
 

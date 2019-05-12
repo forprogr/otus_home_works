@@ -14,8 +14,8 @@ import ru.forprogr.hw.hw04autolog.descriptions.MethodDescription;
 
 public class FindMethodLogAnnotations extends MethodVisitor {
 
-	private ClassDescription classDescription;
-	private MethodDescription methodDescription;
+	final private ClassDescription classDescription;
+	final private MethodDescription methodDescription;
 
 	private boolean haveLogAnnotation;
 

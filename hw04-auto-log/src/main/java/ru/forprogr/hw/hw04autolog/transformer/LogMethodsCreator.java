@@ -16,8 +16,8 @@ import java.lang.invoke.MethodType;
 import static org.objectweb.asm.Opcodes.H_INVOKESTATIC;
 
 public class LogMethodsCreator {
-	private ClassWriter classWriter;
-	private ClassDescription classDescription;
+	final private ClassWriter classWriter;
+	final private ClassDescription classDescription;
 	private Handle concatHandle;
 
 	public LogMethodsCreator(ClassWriter p_classWriter, ClassDescription p_classDescription){

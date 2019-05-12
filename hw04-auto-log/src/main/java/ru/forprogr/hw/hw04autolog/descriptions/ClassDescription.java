@@ -7,16 +7,16 @@ package ru.forprogr.hw.hw04autolog.descriptions;
 //-----------------------------------------------------------------------------
 
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 
 public class ClassDescription {
-	private String className;
+	final private String className;
 
-	private Hashtable<String,MethodDescription> classMethods;
+	final private HashMap<String,MethodDescription> classMethods;
 
 	public ClassDescription(String p_className){
-		classMethods = new Hashtable<>();
+		classMethods = new HashMap<>();
 		className = p_className;
 	}
 

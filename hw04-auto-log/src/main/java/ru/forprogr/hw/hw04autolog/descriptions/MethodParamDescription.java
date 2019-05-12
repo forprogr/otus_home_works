@@ -10,12 +10,12 @@ import org.objectweb.asm.Label;
 
 public class MethodParamDescription {
 
-	private String paramType;
-	private String paramName;
-	private int paramIndex;
-	private Label startLabel;
-	private Label endLabel;
-	private String signature;
+	final private String paramType;
+	final private String paramName;
+	final private int paramIndex;
+	final private Label startLabel;
+	final private Label endLabel;
+	final private String signature;
 
 	public MethodParamDescription(String p_paramName
 									,String p_paramType

@@ -6,7 +6,9 @@ package ru.forprogr.hw.hw04autolog;
 // Licence:   GPL 3.0
 //-----------------------------------------------------------------------------
 import java.lang.instrument.Instrumentation;
+import java.util.ArrayList;
 
+import org.objectweb.asm.Opcodes;
 import ru.forprogr.hw.hw04autolog.transformer.*;
 
 public class LogAgent {
@@ -14,12 +16,14 @@ public class LogAgent {
 	public static void premain(String agentArgs, Instrumentation inst) {
 		System.out.println("\n<i> Start premain(String agentArgs, Instrumentation inst) - ru.forprogr.hw.hw04autolog");
 
-		LogClassTransformer logClassTransformer = new LogClassTransformer();
-		logClassTransformer.addSkippedClassNames("java");
-		logClassTransformer.addSkippedClassNames("sun");
-		logClassTransformer.addSkippedClassNames("jdk");
-		logClassTransformer.addSkippedClassNames("org/jetbrains");
-		logClassTransformer.addSkippedClassNames("com/intellij");
+		ArrayList<String> skippedPackages = new ArrayList<>();
+		skippedPackages.add("java");
+		skippedPackages.add("sun");
+		skippedPackages.add("jdk");
+		skippedPackages.add("org/jetbrains");
+		skippedPackages.add("com/intellij");
+
+		LogClassTransformer logClassTransformer = new LogClassTransformer(skippedPackages, Opcodes.ASM5);
 
 		inst.addTransformer(logClassTransformer);
 	}

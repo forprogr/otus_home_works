@@ -13,7 +13,7 @@ import ru.forprogr.hw.hw04autolog.descriptions.MethodDescription;
 
 public class RenameMethodsWithLog extends ClassVisitor {
 
-	private ClassDescription classDescription;
+	final private ClassDescription classDescription;
 
 	public RenameMethodsWithLog(final int p_api, final ClassVisitor p_classVisitor, ClassDescription p_classDescription){
 		super(p_api,p_classVisitor);
