@@ -1,4 +1,4 @@
-package ru.forprogr.hw.hw04autolog.transformer;
+package ru.forprogr.hw.hw04autolog.visitors;
 //-----------------------------------------------------------------------------
 // Author:    Nemti
 // Created:   08.05.2019 14:05
@@ -9,24 +9,39 @@ package ru.forprogr.hw.hw04autolog.transformer;
 import org.objectweb.asm.*;
 
 import ru.forprogr.hw.hw04autolog.anno.Log;
-import ru.forprogr.hw.hw04autolog.descriptions.ClassDescription;
 import ru.forprogr.hw.hw04autolog.descriptions.MethodDescription;
 
-public class FindMethodLogAnnotations extends MethodVisitor {
+public class FindLogMethodVisitor extends MethodVisitor {
 
-	final private ClassDescription classDescription;
 	final private MethodDescription methodDescription;
 
 	private boolean haveLogAnnotation;
 
-	public FindMethodLogAnnotations(final int api
-									,final MethodVisitor p_methodVisitor
-									,ClassDescription p_classDescription
-									,MethodDescription p_methodDescription){
-		super(api,p_methodVisitor);
-		classDescription = p_classDescription;
-		methodDescription = p_methodDescription;
+	public MethodDescription getMethodDescription() {
+		return methodDescription;
+	}
+
+	public boolean isHaveLogAnnotation() {
+		return haveLogAnnotation;
+	}
+
+	public FindLogMethodVisitor(final int p_api
+									, final MethodVisitor p_methodVisitor
+									, String p_methodName
+									, int p_methodAccess
+									, String p_methodDescriptor
+									, String p_methodSignature
+									, String[] p_methodExceptions){
+		super(p_api,p_methodVisitor);
+
 		haveLogAnnotation = false;
+
+		methodDescription = new MethodDescription(p_methodName
+													, p_methodAccess
+													, p_methodDescriptor
+													, p_methodSignature
+													, p_methodExceptions);
+
 	}
 
 	public String descriptorToClassName(String p_descriptor){
@@ -66,12 +81,4 @@ public class FindMethodLogAnnotations extends MethodVisitor {
 		mv.visitLocalVariable(name, descriptor, signature, start, end, index);
 	}
 
-	@Override
-	public void visitEnd() {
-		if(haveLogAnnotation){
-			classDescription.addClassMethod(methodDescription);
-		}
-
-		mv.visitEnd();
-	}
 }

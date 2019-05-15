@@ -8,14 +8,16 @@ package ru.forprogr.hw.hw04autolog.transformer;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import ru.forprogr.hw.hw04autolog.descriptions.ClassDescription;
+import ru.forprogr.hw.hw04autolog.descriptions.MethodDescription;
+import ru.forprogr.hw.hw04autolog.visitors.FindLogClassVisitor;
+import ru.forprogr.hw.hw04autolog.visitors.RenameMethodsClassVisitor;
 
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 import java.util.List;
+import java.util.Map;
 
 public class LogClassTransformer implements ClassFileTransformer {
 
@@ -45,13 +47,12 @@ public class LogClassTransformer implements ClassFileTransformer {
 			, byte[] p_classByteCodes){
 
 		if (!isSkippedClassName(p_className)) {
-			ClassDescription classDescription = new ClassDescription(p_className);
 
-			findLogAnnonation(classDescription, p_classByteCodes);
+			Map<String, MethodDescription> methodDescriptionHash = findLogAnnonation(p_classByteCodes);
 
-			if (!classDescription.getMethods().isEmpty()) {
+			if (!methodDescriptionHash.isEmpty()) {
 
-				byte[] classByteCodes = renameAndCreateMethodsWithLog(classDescription, p_classByteCodes);
+				byte[] classByteCodes = renameAndCreateMethodsWithLog(p_className,methodDescriptionHash, p_classByteCodes);
 
 				writeToFileModifedClass(p_className, classByteCodes);
 
@@ -63,25 +64,31 @@ public class LogClassTransformer implements ClassFileTransformer {
 	}
 
 
-	private void findLogAnnonation(ClassDescription p_classDescription, byte[] p_classByteCodes){
+	private Map<String, MethodDescription> findLogAnnonation(byte[] p_classByteCodes){
 		ClassReader classReader = new ClassReader(p_classByteCodes);
 		ClassWriter classWriter = new ClassWriter(classReader, 0);
 
-		FindLogAnnotations findLogVisitor = new FindLogAnnotations(asm_api, classWriter, p_classDescription);
+		FindLogClassVisitor findLogVisitor = new FindLogClassVisitor(asm_api, classWriter);
 
 		classReader.accept(findLogVisitor, asm_api);
+
+		return findLogVisitor.getLoggedClassMethods();
 	}
 
-	private byte[] renameAndCreateMethodsWithLog(ClassDescription p_classDescription, byte[] p_classByteCodes){
+	private byte[] renameAndCreateMethodsWithLog(String p_className
+												,Map<String, MethodDescription> methodDescriptionHash
+												,byte[] p_classByteCodes){
 		ClassReader classReader = new ClassReader(p_classByteCodes);
 		ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS);
 
-		RenameMethodsWithLog renameMethodsVisitor = new RenameMethodsWithLog(asm_api, classWriter, p_classDescription);
+		RenameMethodsClassVisitor renameMethodsVisitor = new RenameMethodsClassVisitor(asm_api
+																						, classWriter
+																						, methodDescriptionHash);
 
 		classReader.accept(renameMethodsVisitor, asm_api);
 
-		LogMethodsCreator logMethodsCreator = new LogMethodsCreator(classWriter,p_classDescription);
-		logMethodsCreator.createLogMethods();
+		CreatorLogMethods creatorLogMethods = new CreatorLogMethods(classWriter,p_className);
+		creatorLogMethods.createMethods(methodDescriptionHash.values());
 
 		return classWriter.toByteArray();
 	}

@@ -12,18 +12,21 @@ import ru.forprogr.hw.hw04autolog.descriptions.*;
 import java.lang.invoke.CallSite;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.util.Collection;
 
 import static org.objectweb.asm.Opcodes.H_INVOKESTATIC;
 
-public class LogMethodsCreator {
+public class CreatorLogMethods {
 	final private ClassWriter classWriter;
-	final private ClassDescription classDescription;
-	private Handle concatHandle;
 
-	public LogMethodsCreator(ClassWriter p_classWriter, ClassDescription p_classDescription){
+	final private String loadedClassName;
+
+	final private Handle concatHandle;
+
+	public CreatorLogMethods(ClassWriter p_classWriter, String p_loadedClassName){
 		classWriter = p_classWriter;
-		classDescription = p_classDescription;
-		concatHandle = null;
+		loadedClassName = p_loadedClassName;
+		concatHandle =  getConcatHandle();
 	}
 
 	private MethodVisitor getNewMethod(MethodDescription p_methodDescription){
@@ -35,21 +38,18 @@ public class LogMethodsCreator {
 	}
 
 	private Handle getConcatHandle(){
-		if (concatHandle == null){
+		String owner = Type.getInternalName(java.lang.invoke.StringConcatFactory.class);
 
-			String owner = Type.getInternalName(java.lang.invoke.StringConcatFactory.class);
-
-			String descriptor = MethodType.methodType(CallSite.class
+		String descriptor = MethodType.methodType(CallSite.class
 					, MethodHandles.Lookup.class
 					, String.class
 					, MethodType.class
 					, String.class
 					, Object[].class).toMethodDescriptorString();
 
-			concatHandle = new Handle(H_INVOKESTATIC,owner,"makeConcatWithConstants",descriptor,false);
-		}
+		Handle	retConcatHandle = new Handle(H_INVOKESTATIC,owner,"makeConcatWithConstants",descriptor,false);
 
-		return concatHandle;
+		return retConcatHandle;
 	}
 
 	private int getOpcodeWithType(String p_paramType,int p_iOpcode){
@@ -87,7 +87,7 @@ public class LogMethodsCreator {
 
 		p_newMethod.visitInvokeDynamicInsn("makeConcatWithConstants"
 				, "("+p_varDescription.getParamType()+")Ljava/lang/String;"
-				, getConcatHandle()
+				, concatHandle
 				, p_beforeText+"\u0001");
 
 		p_newMethod.visitMethodInsn(Opcodes.INVOKEVIRTUAL
@@ -157,7 +157,7 @@ public class LogMethodsCreator {
 		loadMethodParams(p_methodDescription,p_newMethod);
 
 		p_newMethod.visitMethodInsn(Opcodes.INVOKEVIRTUAL
-				, classDescription.getClassName()
+				, loadedClassName
 				, p_methodDescription.getMethodProxyName()
 				, p_methodDescription.getMethodDescriptor()
 				, false);
@@ -187,8 +187,8 @@ public class LogMethodsCreator {
 		p_newMethod.visitEnd();
 	}
 
-	public void createLogMethods(){
-		for(MethodDescription methodDescription : classDescription.getMethods()){
+	public void createMethods(final Collection<MethodDescription> p_methodDescriptions){
+		for(MethodDescription methodDescription : p_methodDescriptions){
 
 			MethodVisitor newMethod = getNewMethod(methodDescription);
 
