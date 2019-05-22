@@ -11,15 +11,16 @@
 	</parent>
 
 	<properties>
-		<my.module.name>hw03-testing-framework</my.module.name>
-		<my.package.main>hw03testingframework</my.package.main>
+		<my.module.name>hw04-auto-log</my.module.name>
+		<my.package.main>hw04autolog</my.package.main>
 
 		<my.artifactId>${my.module.name}</my.artifactId>
 		<my.main.class>${project.parent.groupId}.${my.package.main}.Main</my.main.class>
+		<my.premain.class>${project.parent.groupId}.${my.package.main}.LogAgent</my.premain.class>
 		<my.build.name>${my.module.name}</my.build.name>
 	</properties>
 
-	<artifactId>hw03-testing-framework</artifactId>
+	<artifactId>hw04-auto-log</artifactId>
 	<name>${my.module.name}</name>
 
 	<packaging>jar</packaging>
@@ -29,14 +30,25 @@
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>5.3.2</version>
-			<!--<scope>test</scope>-->
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-params</artifactId>
 			<version>5.3.2</version>
-			<!--<scope>test</scope>-->
+			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm</artifactId>
+			<version>7.1</version>
+		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.ow2.asm</groupId>-->
+			<!--<artifactId>asm-tree</artifactId>-->
+			<!--<version>7.1</version>-->
+		<!--</dependency>-->
+
 	</dependencies>
 
 	<build>
@@ -58,6 +70,7 @@
 										implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
 										<Main-Class>${my.main.class}</Main-Class>
+										<Premain-Class>${my.premain.class}</Premain-Class>
 									</manifestEntries>
 								</transformer>
 							</transformers>
